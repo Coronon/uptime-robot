@@ -40,6 +40,7 @@ func SetupMonitors(c config.Config) {
 
 	// Actually setup monitors based on config
 	monitors := make([]Monitor, len(c.Monitors))
+	monitorKeys := make([]string, len(c.Monitors))
 
 	for i := range c.Monitors {
 		monitor := &c.Monitors[i]
@@ -47,6 +48,21 @@ func SetupMonitors(c config.Config) {
 		zap.S().Debugw("Setting up monitor",
 			"name", monitor.Name,
 			"type", monitor.Type,
+		)
+
+		// Check key not reused
+		for k := 0; k < i; k++ {
+			if monitorKeys[k] == monitor.Key {
+				zap.S().Panicw("Key is not unique",
+					"monitor", monitor.Name,
+					"key", monitor.Key,
+				)
+			}
+		}
+		monitorKeys[i] = monitor.Key
+		zap.S().Debugw("Key is unique",
+			"monitor", monitor.Name,
+			"key", monitor.Key,
 		)
 
 		// Determine host
