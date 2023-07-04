@@ -6,6 +6,7 @@ import (
 	"github.com/kardianos/service"
 
 	"github.com/Coronon/uptime-robot/config"
+	"github.com/Coronon/uptime-robot/monitors"
 )
 
 const version = "v1.0.0"
@@ -34,6 +35,9 @@ func (p program) run() {
 	log.Printf("Parsing config at: %v", configPath)
 	config := config.ReadConfig(configPath)
 	log.Printf("Got assigned node name: %v", config.NodeName)
+
+	// Setup monitors
+	monitors.SetupMonitors(config)
 }
 
 func main() {
