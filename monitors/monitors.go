@@ -2,10 +2,10 @@ package monitors
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 
 	"github.com/Coronon/uptime-robot/config"
+	"go.uber.org/zap"
 )
 
 type Monitor interface {
@@ -27,10 +27,12 @@ func SetupMonitors(c config.Config) {
 	// Check at least one monitor defined
 	numMonitors := len(c.Monitors)
 	if numMonitors == 0 {
-		log.Fatal("No monitors defined")
+		zap.L().Panic("No monitors defined")
 	}
 
-	log.Printf("Setting up %v monitors", len(c.Monitors))
+	zap.S().Infow("Setting up monitors",
+		"count", len(c.Monitors),
+	)
 
 	// Actually setup monitors based on config
 	monitors := make([]Monitor, len(c.Monitors))
@@ -38,7 +40,10 @@ func SetupMonitors(c config.Config) {
 	for i := range c.Monitors {
 		monitor := &c.Monitors[i]
 
-		log.Printf("Setting up monitor: %v (%v)", monitor.Name, monitor.Type)
+		zap.S().Debugw("Setting up monitor",
+			"name", monitor.Name,
+			"type", monitor.Type,
+		)
 
 		// Determine host
 		var hostURL string
@@ -46,16 +51,26 @@ func SetupMonitors(c config.Config) {
 			host := &c.Hosts[h]
 
 			if host.Name == monitor.Host {
+				zap.S().Debugw("Found matching host",
+					"name", host.Name,
+					"url", host.URL,
+				)
 				hostURL = host.URL
 				break
 			}
 		}
 		if hostURL == "" {
-			log.Fatalf("Could not find host: %v", monitor.Host)
+			zap.S().Panicw("Could not find host",
+				"host", monitor.Host,
+			)
 		}
 
 		// Ensure host ends with a trailing '/'
 		if hostURL[len(hostURL)-1:] != "/" {
+			zap.S().Debugw("Adding trailing '/' to host url",
+				"host", monitor.Host,
+				"old_url", hostURL,
+			)
 			hostURL = hostURL + "/"
 		}
 
@@ -64,16 +79,18 @@ func SetupMonitors(c config.Config) {
 		case "alive":
 			monitors[i] = setupAliveMonitor(hostURL, monitor)
 		default:
-			log.Fatalf("Unknown monitor type: %v", monitor.Type)
+			zap.S().Panicw("Unknown monitor type",
+				"type", monitor.Type,
+			)
 		}
 	}
 
 	// Run monitors
-	log.Print("Starting monitors...")
+	zap.L().Info("Starting monitors...")
 	for i := range monitors {
 		monitors[i].Run()
 	}
-	log.Print("All monitors started")
+	zap.L().Info("All monitors started")
 }
 
 // Represents an up/down monitor monitorStatus
@@ -97,6 +114,15 @@ func pushToHost(
 ) (resp *http.Response, err error) {
 	//? We already ensure that host ends with a trailing / in SetupMonitors
 	url := fmt.Sprintf("%v%v?status=%v&msg=%v&ping=%v", host, key, status, message, pingMs)
+
+	zap.S().Debugw("Pushing to host",
+		"host", host,
+		"key", key,
+		"status", status,
+		"message", message,
+		"pingMs", pingMs,
+		"url", url,
+	)
 
 	return http.Get(url)
 }

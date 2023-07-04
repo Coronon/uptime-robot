@@ -1,10 +1,10 @@
 package monitors
 
 import (
-	"log"
 	"time"
 
 	"github.com/Coronon/uptime-robot/config"
+	"go.uber.org/zap"
 )
 
 type aliveMonitor struct {
@@ -40,9 +40,22 @@ func (m *aliveMonitor) run() {
 	for {
 		// Simply let the upstream host know that we are alive
 		go func() {
+			zap.S().Debugw("Running monitor",
+				"name", m.name,
+				"type", "alive",
+				"host", m.host,
+				"key", m.key,
+			)
+
 			_, err := pushToHost(m.host, m.key, StatusUp, "OK", 0)
+
 			if err != nil {
-				log.Printf("Error while pushing alive to host for: %v", m.name)
+				zap.S().Warnw("Error while pushing to host",
+					"name", m.name,
+					"type", "alive",
+					"host", m.host,
+					"key", m.key,
+				)
 			}
 		}()
 
