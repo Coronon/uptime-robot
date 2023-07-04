@@ -82,6 +82,8 @@ func SetupMonitors(c config.Config) {
 		switch monitor.Type {
 		case "alive":
 			monitors[i] = setupAliveMonitor(hostURL, monitor)
+		case "disk_usage":
+			monitors[i] = setupdiskUsageMonitor(hostURL, monitor)
 		default:
 			zap.S().Panicw("Unknown monitor type",
 				"type", monitor.Type,
