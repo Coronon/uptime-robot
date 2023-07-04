@@ -3,6 +3,7 @@ package monitors
 import (
 	"fmt"
 	"net/http"
+	"net/url"
 	"time"
 
 	"github.com/Coronon/uptime-robot/config"
@@ -115,8 +116,29 @@ func pushToHost(
 	message string,
 	pingMs int,
 ) (resp *http.Response, err error) {
+	// Parse base URL
+	baseUrl, err := url.Parse(host)
+	if err != nil {
+		zap.S().DPanic("Malformed host URL",
+			"url", host,
+			"error", err.Error(),
+		)
+		return nil, err
+	}
+
+	// Add key path
 	//? We already ensure that host ends with a trailing / in SetupMonitors
-	url := fmt.Sprintf("%v%v?status=%v&msg=%v&ping=%v", host, key, status, message, pingMs)
+	baseUrl.Path += key
+
+	// Add dynamic status information
+	params := url.Values{}
+	params.Add("status", string(status))
+	params.Add("msg", message)
+	params.Add("ping", fmt.Sprint(pingMs))
+	baseUrl.RawQuery = params.Encode()
+
+	// Build final URL
+	url := baseUrl.String()
 
 	zap.S().Debugw("Pushing to host",
 		"host", host,
@@ -158,7 +180,7 @@ func runMonitorPeriodically(m Monitor) {
 				)
 			} else {
 				// Only push to host if monitor did not error (down should not be an error)
-				_, err = pushToHost(m.HostURL(), m.Key(), status, message, ping)
+				resp, err := pushToHost(m.HostURL(), m.Key(), status, message, ping)
 
 				if err != nil {
 					zap.S().Warnw("Error pushing to host",
@@ -168,6 +190,15 @@ func runMonitorPeriodically(m Monitor) {
 						"key", m.Key(),
 						"interval", m.Interval(),
 						"error", err,
+					)
+				} else if resp.StatusCode != 200 {
+					zap.S().Warnw("Error pushing to host",
+						"name", m.Name(),
+						"type", m.Type(),
+						"host", m.HostURL(),
+						"key", m.Key(),
+						"interval", m.Interval(),
+						"resp_statuscode", resp.StatusCode,
 					)
 				}
 			}
