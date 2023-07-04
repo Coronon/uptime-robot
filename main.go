@@ -2,9 +2,10 @@ package main
 
 import (
 	"log"
-	"time"
 
 	"github.com/kardianos/service"
+
+	"github.com/Coronon/uptime-robot/config"
 )
 
 const version = "v1.0.0"
@@ -26,10 +27,13 @@ func (p program) Stop(s service.Service) error {
 }
 
 func (p program) run() {
-	for {
-		log.Print("Service is running")
-		time.Sleep(1 * time.Second)
-	}
+	// Handle config
+	// TODO: Make this dynamic with a default
+	configPath := "example.config.yml"
+
+	log.Printf("Parsing config at: %v", configPath)
+	config := config.ReadConfig(configPath)
+	log.Printf("Got assigned node name: %v", config.NodeName)
 }
 
 func main() {
