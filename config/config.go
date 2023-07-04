@@ -7,6 +7,8 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+// Generated with:
+// https://zhwt.github.io/yaml-to-go/
 type Config struct {
 	NodeName string     `yaml:"node_name"`
 	Hosts    []Host    `yaml:"hosts"`
