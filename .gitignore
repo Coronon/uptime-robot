@@ -19,3 +19,6 @@
 
 # Go workspace file
 go.work
+
+# Uptime-Robot
+uptime-robot.yml
