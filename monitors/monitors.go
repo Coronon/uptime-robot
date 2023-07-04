@@ -3,6 +3,7 @@ package monitors
 import (
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/Coronon/uptime-robot/config"
 	"go.uber.org/zap"
@@ -15,11 +16,13 @@ type Monitor interface {
 	Type() string
 	// Resolved host of this monitor
 	HostURL() string
+	// Key used to identify this monitor on the uptime host
+	Key() string
 	// Interval in seconds this monitor runs
 	Interval() int
 
-	// Start running this monitor
-	Run()
+	// Run a single iteration of this monitor (periodically called)
+	Run() (status monitorStatus, message string, pingMs int, err error)
 }
 
 // Schedule monitors to run in background
@@ -88,7 +91,7 @@ func SetupMonitors(c config.Config) {
 	// Run monitors
 	zap.L().Info("Starting monitors...")
 	for i := range monitors {
-		monitors[i].Run()
+		runMonitorPeriodically(monitors[i])
 	}
 	zap.L().Info("All monitors started")
 }
@@ -125,4 +128,54 @@ func pushToHost(
 	)
 
 	return http.Get(url)
+}
+
+// Run a monitor periodically based on its configured interval
+//
+// Should be called in a go-routine
+func runMonitorPeriodically(m Monitor) {
+	sleepTime := time.Duration(m.Interval()) * time.Second
+
+	for {
+		go func() {
+			zap.S().Debugw("Running monitor",
+				"name", m.Name(),
+				"type", m.Type(),
+				"host", m.HostURL(),
+				"key", m.Key(),
+				"interval", m.Interval(),
+			)
+
+			status, message, ping, err := m.Run()
+			if err != nil {
+				zap.S().Warnw("Error running monitor",
+					"name", m.Name(),
+					"type", m.Type(),
+					"host", m.HostURL(),
+					"key", m.Key(),
+					"interval", m.Interval(),
+					"error", err,
+				)
+			} else {
+				// Only push to host if monitor did not error (down should not be an error)
+				_, err = pushToHost(m.HostURL(), m.Key(), status, message, ping)
+
+				if err != nil {
+					zap.S().Warnw("Error pushing to host",
+						"name", m.Name(),
+						"type", m.Type(),
+						"host", m.HostURL(),
+						"key", m.Key(),
+						"interval", m.Interval(),
+						"error", err,
+					)
+				}
+			}
+		}()
+
+		// Always wait for interval
+		//? The interval does not depend on the time the monitor and pushing it's
+		//? result take
+		time.Sleep(sleepTime)
+	}
 }
