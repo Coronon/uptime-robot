@@ -38,7 +38,7 @@ To use Uptime-Robot, follow these steps:
 Before you can start using Uptime-Robot, you need to configure it properly.
 Follow these steps to set up the configuration:
 
-1. Open the uptime-robot.yml file in the Uptime-Robot directory.
+1. Create a `uptime-robot.yml` file in the Uptime-Robot directory.
 2. Customize the configuration options according to your requirements. 
 
 ```yaml
@@ -74,6 +74,50 @@ monitors:
     host: someCoolName
     key: zyxwvutsrq
     interval: 60
+```
+
+3. Save the configuration file to disk.
+
+### Monitor Types
+
+Only configuration options unique to a monitor type will be documented.
+For general options, see above. 
+
+#### alive
+
+A simple monitor that periodically sends an **up** status to its host.
+This monitor is supposed to signal that a node is still up and connected to the
+host.
+
+```yaml
+- name: Alive ping
+  type: alive
+  host: myHostsName
+  key: zyxwvutsrq
+  interval: 60
+```
+
+#### disk_usage
+
+Checks the available disk space in percent and raises a **down** status once the
+used space exceeds a configured threshold.
+
+```yaml
+- name: Available disk space
+  type: disk_usage
+  host: myHostsName
+  key: zyxwvutsrq
+  interval: 60
+
+  # The file system object to check usage of
+  # Linux: a file location as used in the `df` command, e.g. /dev/sda
+  # Windows: a directory on a disk, e.g. C:
+  # If this parameter is a UNC name, it must include a trailing backslash, for example, "\\MyServer\MyShare\".
+  # This parameter does not have to specify the root directory on a disk. It accepts any directory on a disk.
+  file_system: C:\
+  # Usage percentage that will start to trigger a down status
+  # actual_usage >= down_threshold ? "DOWN" : "UP"
+  down_threshold: 95
 ```
 
 ## Usage
