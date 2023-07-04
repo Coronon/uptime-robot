@@ -110,7 +110,7 @@ func SetupMonitors(c config.Config) {
 	// Run monitors
 	zap.L().Info("Starting monitors...")
 	for i := range monitors {
-		runMonitorPeriodically(monitors[i])
+		go runMonitorPeriodically(monitors[i])
 	}
 	zap.L().Info("All monitors started")
 }
