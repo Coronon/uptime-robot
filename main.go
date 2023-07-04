@@ -29,7 +29,7 @@ func (p program) Stop(s service.Service) error {
 func (p program) run() {
 	// Handle config
 	// TODO: Make this dynamic with a default
-	configPath := "example.config.yml"
+	configPath := "uptime-robot.yml"
 
 	zap.S().Info("Parsing config at: %v", configPath)
 	config := config.ReadConfig(configPath)
