@@ -10,7 +10,7 @@ import (
 // Generated with:
 // https://zhwt.github.io/yaml-to-go/
 type Config struct {
-	NodeName string     `yaml:"node_name"`
+	NodeName string    `yaml:"node_name"`
 	Hosts    []Host    `yaml:"hosts"`
 	Monitors []Monitor `yaml:"monitors"`
 }
@@ -24,7 +24,7 @@ type Monitor struct {
 	Host          string `yaml:"host"`
 	Key           string `yaml:"key"`
 	Interval      int    `yaml:"interval"`
-	FileSystem    string `yaml:"file_system,omitempty"`
+	FilePath      string `yaml:"file_path,omitempty"`
 	DownThreshold int    `yaml:"down_threshold,omitempty"`
 }
 

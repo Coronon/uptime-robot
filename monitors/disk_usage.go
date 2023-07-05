@@ -16,8 +16,8 @@ type diskUsageMonitor struct {
 	key      string
 	interval int
 
-	// Linux: df {fileSystem}, Windows: drive letter
-	fileSystem string
+	// Linux: stat -f {fileInFilesystem}, Windows: drive letter
+	filePath string
 	// Percentage of used space which will start triggering down status
 	downThreshold int
 }
@@ -46,25 +46,30 @@ func (m *diskUsageMonitor) Run() (monitorStatus, string, int, error) {
 	// Get disk usage
 	zap.S().Debugw("Getting disk usage",
 		"name", m.name,
-		"file_system", m.fileSystem,
+		"file_path", m.filePath,
 		"down_threshold", m.downThreshold,
 	)
 
-	usage := du.NewDiskUsage(m.fileSystem)
+	diskInfo := du.NewDiskUsage(m.filePath)
 
-	if usage == nil || math.IsNaN(float64(usage.Usage())) {
+	if diskInfo == nil || math.IsNaN(float64(diskInfo.Usage())) {
 		zap.S().Errorw("Error getting disk usage",
 			"name", m.name,
-			"disk_space", usage,
-			"usage", usage.Usage(),
+			"disk_space", diskInfo,
+			// This usage may be inaccurate, see below
+			"disk_usage", diskInfo.Usage(),
 		)
 
 		// We want to still push this error to the uptime host
 		return StatusDown, "Error getting disk usage", 0, nil
 	}
 
+	// The normal .Usage() uses the complete .Free() instead of the actually
+	// usable .Available() space, so we compute what df would output here
+	// Basically stat -> Blocks Free vs Blocks Available
+	percentageAvailable := float64(diskInfo.Available()) / float64(diskInfo.Size()) * 100
 	// This is a primitive round as we know that usage can never be negative
-	percentage := int((usage.Usage() * 100) + 0.5)
+	percentage := 100 - int(percentageAvailable+0.5)
 
 	var status monitorStatus
 	var message string
@@ -88,11 +93,11 @@ func (m *diskUsageMonitor) Run() (monitorStatus, string, int, error) {
 
 // Setup a monitor of type 'alive'
 func setupdiskUsageMonitor(host string, monitor *config.Monitor) *diskUsageMonitor {
-	if monitor.FileSystem == "" {
+	if monitor.FilePath == "" {
 		zap.S().Panicw("Missing paramter for monitor",
 			"name", monitor.Name,
 			"type", monitor.Type,
-			"paramter", "file_system",
+			"paramter", "file_path",
 		)
 	}
 
@@ -109,7 +114,7 @@ func setupdiskUsageMonitor(host string, monitor *config.Monitor) *diskUsageMonit
 		host:          host,
 		interval:      monitor.Interval,
 		key:           monitor.Key,
-		fileSystem:    monitor.FileSystem,
+		filePath:      monitor.FilePath,
 		downThreshold: monitor.DownThreshold,
 	}
 }

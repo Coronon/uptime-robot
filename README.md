@@ -110,11 +110,15 @@ used space exceeds a configured threshold.
   interval: 60
 
   # The file system object to check usage of
-  # Linux: a file location as used in the `df` command, e.g. /dev/sda
+  # Linux: pathname of any file within a mounted filesystem, e.g. /
+  #   When using mounted filesystems the underlying statfs implementation
+  #   requires specifying a file WITHIN that filesystem instead of the device.
+  #   -> e.g. /mnt/data instead of /dev/sdb
   # Windows: a directory on a disk, e.g. C:
-  # If this parameter is a UNC name, it must include a trailing backslash, for example, "\\MyServer\MyShare\".
-  # This parameter does not have to specify the root directory on a disk. It accepts any directory on a disk.
-  file_system: C:\
+  #   If this parameter is a UNC name, it must include a trailing backslash,
+  #   for example, "\\MyServer\MyShare\". This parameter does not have to
+  #   specify the root directory on a disk. It accepts any directory on a disk.
+  file_path: C:\
   # Usage percentage that will start to trigger a down status
   # actual_usage >= down_threshold ? "DOWN" : "UP"
   down_threshold: 95
