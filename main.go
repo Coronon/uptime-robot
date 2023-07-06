@@ -45,7 +45,9 @@ func (p program) run() {
 
 func init() {
 	// Setup logging
-	logger, _ := zap.NewDevelopment()
+	cfg := zap.NewProductionConfig()
+
+	logger, _ := cfg.Build()
 	defer logger.Sync()
 
 	zap.ReplaceGlobals(logger)
@@ -56,8 +58,19 @@ func main() {
 	shouldInstall := flag.Bool("install", false, "Installs Uptime-Robot as a service on your computer")
 	shouldUninstall := flag.Bool("uninstall", false, "Uninstalls the Uptime-Robot service from your computer")
 	isForcedRun := flag.Bool("interactive", false, "Run Uptime-Robot interactively (not as a service)")
+	isVerbose := flag.Bool("v", false, "Enable debug output (might include sensitive data!)")
 
 	flag.Parse()
+
+	// Setup verbose logging
+	if *isVerbose {
+		verboseCfg := zap.NewDevelopmentConfig()
+
+		verboseLogger, _ := verboseCfg.Build()
+		defer verboseLogger.Sync()
+
+		zap.ReplaceGlobals(verboseLogger)
+	}
 
 	// Set current working directory
 	ex, err := os.Executable()
