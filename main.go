@@ -8,8 +8,8 @@ import (
 	"github.com/kardianos/service"
 	"go.uber.org/zap"
 
-	"github.com/Coronon/uptime-robot/config"
-	"github.com/Coronon/uptime-robot/monitors"
+	"github.com/coronon/uptime-robot/config"
+	"github.com/coronon/uptime-robot/monitors"
 )
 
 const version = "v1.0.0"

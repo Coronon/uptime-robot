@@ -7,7 +7,7 @@ import (
 	"github.com/ricochet2200/go-disk-usage/du"
 	"go.uber.org/zap"
 
-	"github.com/Coronon/uptime-robot/config"
+	"github.com/coronon/uptime-robot/config"
 )
 
 type diskUsageMonitor struct {

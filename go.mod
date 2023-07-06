@@ -1,4 +1,4 @@
-module github.com/Coronon/uptime-robot
+module github.com/coronon/uptime-robot
 
 go 1.20
 

@@ -1,7 +1,7 @@
 package monitors
 
 import (
-	"github.com/Coronon/uptime-robot/config"
+	"github.com/coronon/uptime-robot/config"
 )
 
 type aliveMonitor struct {
