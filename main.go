@@ -1,6 +1,9 @@
 package main
 
 import (
+	"flag"
+	"os"
+
 	"github.com/kardianos/service"
 	"go.uber.org/zap"
 
@@ -48,21 +51,58 @@ func init() {
 }
 
 func main() {
+	// Handle command line arguments
+	shouldInstall := flag.Bool("install", false, "Installs Uptime-Robot as a service on your computer")
+	shouldUninstall := flag.Bool("uninstall", false, "Uninstalls the Uptime-Robot service from your computer")
+	isForcedRun := flag.Bool("interactive", false, "Run Uptime-Robot interactively (not as a service)")
+
+	flag.Parse()
+
 	// Setup service
 	serviceConfig := &service.Config{
 		Name:        serviceName,
 		DisplayName: displayName,
 		Description: serviceDesc,
 	}
-
 	prg := &program{}
 	s, err := service.New(prg, serviceConfig)
-
 	if err != nil {
-		zap.S().Fatal("Cannot create the service", err.Error())
+		zap.S().Fatal("Cannot create the service configuration", err.Error())
 	}
-	err = s.Run()
-	if err != nil {
-		zap.S().Fatal("Cannot start the service", err.Error())
+
+	// Handle uninstall
+	if *shouldUninstall {
+		zap.L().Info("Uninstalling the Uptime-Robot service from your computer...")
+
+		err = s.Uninstall()
+		if err != nil {
+			zap.S().Fatalw("Cannot uninstall the service", "error", err)
+		}
+		zap.L().Info("Uninstalled the service!")
+		os.Exit(0)
+	}
+
+	// Handle install
+	// This is handled after uninstall to allow "re-installing" by specifying both flags
+	if *shouldInstall {
+		zap.L().Info("Installing the Uptime-Robot service to your computer...")
+
+		err = s.Install()
+		if err != nil {
+			zap.S().Fatalw("Cannot install the service", "error", err)
+		}
+		zap.L().Info("Installed the service!")
+		os.Exit(0)
+	}
+
+	// Actually run program if invoked by service manager or forced interactively
+	if !service.Interactive() || *isForcedRun {
+		zap.L().Info("Starting Uptime-Robot...")
+		err = s.Run()
+		if err != nil {
+			zap.S().Fatalw("Cannot start", "error", err.Error())
+		}
+	} else {
+		zap.L().Info("Not running under a service manager or forced interactive - not starting Uptime-Robot")
 	}
 }
