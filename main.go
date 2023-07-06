@@ -20,13 +20,13 @@ const serviceDesc = "Utility service that provides push based uptime monitoring 
 type program struct{}
 
 func (p program) Start(s service.Service) error {
-	zap.S().Info(s.String() + " started")
+	zap.S().Infof("%v started", s.String())
 	go p.run()
 	return nil
 }
 
 func (p program) Stop(s service.Service) error {
-	zap.S().Info(s.String() + " stopped")
+	zap.S().Infof("%v stopped", s.String())
 	return nil
 }
 
@@ -35,9 +35,9 @@ func (p program) run() {
 	// TODO: Make this dynamic with a default
 	configPath := "uptime-robot.yml"
 
-	zap.S().Info("Parsing config at: %v", configPath)
+	zap.S().Infof("Parsing config at: %v", configPath)
 	config := config.ReadConfig(configPath)
-	zap.S().Info("Got assigned node name: %v", config.NodeName)
+	zap.S().Infof("Got assigned node name: %v", config.NodeName)
 
 	// Setup monitors
 	monitors.SetupMonitors(config)
