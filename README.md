@@ -32,10 +32,18 @@ To use Uptime-Robot, follow these steps:
 [releases](https://github.com/coronon/uptime-robot/releases) page.
 
 2. Place the executable in a directory of your choice.
+3. Install the executable as a system service:
+
+```bash
+# You might need to run this command as root/administrator
+./uptime-robot -install
+```
+4. Uptime-Robot is now installed as a system-wide service.
 
 ## Configuration
 
 Before you can start using Uptime-Robot, you need to configure it properly.
+Uptime-Robot tries to locate its configuration next to the binary.
 Follow these steps to set up the configuration:
 
 1. Create a `uptime-robot.yml` file in the Uptime-Robot directory.
@@ -77,6 +85,7 @@ monitors:
 ```
 
 3. Save the configuration file to disk.
+4. Restart the Uptime-Robot service.
 
 ### Monitor Types
 
@@ -126,15 +135,17 @@ used space exceeds a configured threshold.
 
 ## Usage
 
-Once you have installed and configured Uptime-Robot, you can use it by following
-these steps:
+Once you have installed and configured Uptime-Robot, you can use it from the
+terminal by following these steps:
 
 1. Open a terminal or command prompt.
 2. Navigate to the directory where you placed the Uptime-Robot executable.
 3. Run the Uptime-Robot executable:
 
 ```bash
-./uptime-robot
+# The -interactive flag is necessary if uptime-robot is not running under a
+# service manager
+./uptime-robot -interactive
 ```
 
 4. Uptime-Robot will start monitoring the specified monitor types and collect
