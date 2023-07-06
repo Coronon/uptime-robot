@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"os"
+	"path/filepath"
 
 	"github.com/kardianos/service"
 	"go.uber.org/zap"
@@ -57,6 +58,19 @@ func main() {
 	isForcedRun := flag.Bool("interactive", false, "Run Uptime-Robot interactively (not as a service)")
 
 	flag.Parse()
+
+	// Set current working directory
+	ex, err := os.Executable()
+	if err != nil {
+		zap.S().Fatalw("Could not determine executable path", "error", err)
+	}
+	newCWD := filepath.Dir(ex)
+
+	zap.S().Debugw("Setting current working directory", "cwd", newCWD)
+	err = os.Chdir(newCWD)
+	if err != nil {
+		zap.S().Fatalw("Could not change current working directory", "error", err)
+	}
 
 	// Setup service
 	serviceConfig := &service.Config{
