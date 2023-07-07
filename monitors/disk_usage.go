@@ -92,7 +92,7 @@ func (m *diskUsageMonitor) Run() (monitorStatus, string, int, error) {
 }
 
 // Setup a monitor of type 'alive'
-func setupdiskUsageMonitor(host string, monitor *config.Monitor) *diskUsageMonitor {
+func setupDiskUsageMonitor(host string, monitor *config.Monitor) *diskUsageMonitor {
 	if monitor.FilePath == "" {
 		zap.S().Panicw("Missing paramter for monitor",
 			"name", monitor.Name,
