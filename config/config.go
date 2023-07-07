@@ -1,9 +1,9 @@
 package config
 
 import (
-	"log"
 	"os"
 
+	"go.uber.org/zap"
 	"gopkg.in/yaml.v3"
 )
 
@@ -32,14 +32,14 @@ type Monitor struct {
 func ReadConfig(path string) Config {
 	data, err := os.ReadFile(path)
 	if err != nil {
-		log.Fatalf("Error reading config: %v", err)
+		zap.S().Fatalf("Error reading config: %v", err)
 	}
 
 	c := Config{}
 
 	err = yaml.Unmarshal(data, &c)
 	if err != nil {
-		log.Fatalf("Error parsing config: %v", err)
+		zap.S().Fatalf("Error parsing config: %v", err)
 	}
 
 	return c
