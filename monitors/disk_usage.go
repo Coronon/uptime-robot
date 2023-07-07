@@ -91,7 +91,7 @@ func (m *diskUsageMonitor) Run() (monitorStatus, string, int, error) {
 	return status, message, percentage, nil
 }
 
-// Setup a monitor of type 'alive'
+// Setup a monitor of type 'disk_usage'
 func setupDiskUsageMonitor(host string, monitor *config.Monitor) *diskUsageMonitor {
 	if monitor.FilePath == "" {
 		zap.S().Panicw("Missing paramter for monitor",
