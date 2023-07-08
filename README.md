@@ -133,6 +133,64 @@ used space exceeds a configured threshold.
   down_threshold: 95
 ```
 
+#### email_ping
+
+Periodically checks whether emails can be sent and received. If either fails
+this monitor will raise a **down** status. In order to verify sending and
+receiving capabilities, an email is first sent to a reply host such as
+[PingPong-Mail](https://github.com/Coronon/pingpong-mail). After sending this
+monitor will wait for a specified timeout and check that a reply was received.
+
+```yaml
+- name: Email working
+  type: email_ping
+  host: myHostsName
+  key: zyxwvutsrq
+  interval: 300
+
+  # The hostname of the SMTP server used to send the initial email 
+  smtp_host: smtp.example.com
+  # The port of the SMTP server used to send the initial email
+  # Many servers regard this kind of sending as "relaying" which would most
+  # commonly use port 25. Other common options are: 587, 2525.
+  smtp_port: 25
+  # E-Mail address to use in <From:> header (commonly referred to as the sender)
+  # This is also the address a reply will be sent to when using PingPong-Mail.
+  smtp_sender_address: email-ping@example.com
+  # E-Mail address of the initial mails recipient
+  # If you don't want to self-host your own auto-reply solution, you can use the
+  # address from this example for a free, privacy focused alternative.
+  # More information: https://github.com/Coronon/pingpong-mail
+  smtp_recipient_address: check@ping-pong.email
+  # Username used to authenticate to the SMTP server
+  # Most servers will only relay email for authenticated users. If you don't
+  # require PLAIN authentication, you may leave this empty.
+  smtp_username: email-ping@example.com
+  # Password used to authenticate to the SMTP server
+  # See explanation above.
+  smtp_password: MySuPeRsEcUrEpAsSwOrD
+
+  # The hostname of the IMAP server used to receive the response
+  imap_host: imap.example.com
+  # The port of the IMAP server used to receive the response
+  # Other common options are: 993
+  imap_port: 143
+  # Username used to authenticate to the IMAP server
+  imap_username: email-ping@example.com
+  # Password used to authenticate to the IMAP server
+  # Optional
+  imap_password: MySuPeRsEcUrEpAsSwOrD
+
+  # The subject of the initially sent email
+  message_subject: PING - Testmail
+  # The body (text) of the initially sent email
+  message_body: This is an automated test message :)
+
+  # Time in seconds after which to regard the test as failed if no response was
+  # received
+  timeout: 180
+```
+
 ## Usage
 
 Once you have installed and configured Uptime-Robot, you can use it from the

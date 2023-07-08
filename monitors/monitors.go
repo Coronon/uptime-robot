@@ -100,6 +100,8 @@ func SetupMonitors(c config.Config) {
 			monitors[i] = setupAliveMonitor(hostURL, monitor)
 		case "disk_usage":
 			monitors[i] = setupDiskUsageMonitor(hostURL, monitor)
+		case "email_ping":
+			monitors[i] = setupEmailPingMonitor(hostURL, monitor)
 		default:
 			zap.S().Panicw("Unknown monitor type",
 				"type", monitor.Type,
