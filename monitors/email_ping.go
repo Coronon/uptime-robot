@@ -25,8 +25,9 @@ type emailPingMonitor struct {
 	imap_username  string
 	imap_password  string
 
-	message_subject string
-	message_body    string
+	message_subject  string
+	message_body     string
+	response_subject string
 
 	timeout int
 }
@@ -157,6 +158,13 @@ func setupEmailPingMonitor(host string, monitor *config.Monitor) *emailPingMonit
 			"paramter", "message_body",
 		)
 	}
+	if monitor.ResponseSubject == "" {
+		zap.S().Panicw("Missing paramter for monitor",
+			"name", monitor.Name,
+			"type", monitor.Type,
+			"paramter", "response_subject",
+		)
+	}
 
 	//? Misc
 	if monitor.Timeout == 0 {
@@ -188,8 +196,9 @@ func setupEmailPingMonitor(host string, monitor *config.Monitor) *emailPingMonit
 		imap_username:  monitor.IMAPUsername,
 		imap_password:  monitor.IMAPPassword,
 
-		message_subject: monitor.MessageSubject,
-		message_body:    monitor.MessageBody,
+		message_subject:  monitor.MessageSubject,
+		message_body:     monitor.MessageBody,
+		response_subject: monitor.ResponseSubject,
 
 		timeout: monitor.Timeout,
 	}

@@ -41,6 +41,7 @@ type Monitor struct {
 	IMAPPassword         string `yaml:"imap_password,omitempty"`
 	MessageSubject       string `yaml:"message_subject,omitempty"`
 	MessageBody          string `yaml:"message_body,omitempty"`
+	ResponseSubject      string `yaml:"response_subject,omitempty"`
 }
 
 // Read and parse a yaml config at path

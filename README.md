@@ -193,6 +193,10 @@ monitor will wait for a specified timeout and check that a reply was received.
   message_subject: PING - Testmail
   # The body (text) of the initially sent email
   message_body: This is an automated test message :)
+  # Subject expected for email recieved back
+  # The variable `{ORIG_SUBJ}` will be replaced with the unaltered subject of
+  # the sent email.
+  response_subject: "PONG - '{ORIG_SUBJ}'"
 
   # Time in seconds after which to regard the test as failed if no response was
   # received
