@@ -190,7 +190,8 @@ monitor will wait for a specified timeout and check that a reply was received.
   imap_password: MySuPeRsEcUrEpAsSwOrD
 
   # The subject of the initially sent email
-  message_subject: PING - Testmail
+  # The variable `{UUID}` can optionally be used to include a random V4 UUID.
+  message_subject: PING ({UUID})
   # The body (text) of the initially sent email
   message_body: This is an automated test message :)
   # Subject expected for email recieved back
