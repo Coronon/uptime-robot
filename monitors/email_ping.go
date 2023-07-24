@@ -13,15 +13,17 @@ type emailPingMonitor struct {
 
 	smtp_host              string
 	smtp_port              int
+	smtp_force_tls         bool
 	smtp_sender_address    string
 	smtp_recipient_address string
 	smtp_username          string
 	smtp_password          string
 
-	imap_host     string
-	imap_port     int
-	imap_username string
-	imap_password string
+	imap_host      string
+	imap_port      int
+	imap_force_tls bool
+	imap_username  string
+	imap_password  string
 
 	message_subject string
 	message_body    string
@@ -174,15 +176,17 @@ func setupEmailPingMonitor(host string, monitor *config.Monitor) *emailPingMonit
 
 		smtp_host:              monitor.SMTPHost,
 		smtp_port:              monitor.SMTPPort,
+		smtp_force_tls:         monitor.SMTPForceTLS,
 		smtp_sender_address:    monitor.SMTPSenderAddress,
 		smtp_recipient_address: monitor.SMTPRecipientAddress,
 		smtp_username:          monitor.SMTPUsername,
 		smtp_password:          monitor.SMTPPassword,
 
-		imap_host:     monitor.IMAPHost,
-		imap_port:     monitor.IMAPPort,
-		imap_username: monitor.IMAPUsername,
-		imap_password: monitor.IMAPPassword,
+		imap_host:      monitor.IMAPHost,
+		imap_port:      monitor.IMAPPort,
+		imap_force_tls: monitor.IMAPForceTLS,
+		imap_username:  monitor.IMAPUsername,
+		imap_password:  monitor.IMAPPassword,
 
 		message_subject: monitor.MessageSubject,
 		message_body:    monitor.MessageBody,

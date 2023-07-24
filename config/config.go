@@ -29,12 +29,14 @@ type Monitor struct {
 	DownThreshold        int    `yaml:"down_threshold,omitempty"`
 	SMTPHost             string `yaml:"smtp_host,omitempty"`
 	SMTPPort             int    `yaml:"smtp_port,omitempty"`
+	SMTPForceTLS         bool   `yaml:"smtp_force_tls,omitempty"`
 	SMTPSenderAddress    string `yaml:"smtp_sender_address,omitempty"`
 	SMTPRecipientAddress string `yaml:"smtp_recipient_address,omitempty"`
 	SMTPUsername         string `yaml:"smtp_username,omitempty"`
 	SMTPPassword         string `yaml:"smtp_password,omitempty"`
 	IMAPHost             string `yaml:"imap_host,omitempty"`
 	IMAPPort             int    `yaml:"imap_port,omitempty"`
+	IMAPForceTLS         bool   `yaml:"imap_force_tls,omitempty"`
 	IMAPUsername         string `yaml:"imap_username,omitempty"`
 	IMAPPassword         string `yaml:"imap_password,omitempty"`
 	MessageSubject       string `yaml:"message_subject,omitempty"`

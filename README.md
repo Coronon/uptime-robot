@@ -151,9 +151,13 @@ monitor will wait for a specified timeout and check that a reply was received.
   # The hostname of the SMTP server used to send the initial email 
   smtp_host: smtp.example.com
   # The port of the SMTP server used to send the initial email
-  # Many servers regard this kind of sending as "relaying" which would most
-  # commonly use port 25. Other common options are: 587, 2525.
-  smtp_port: 25
+  # When using authentication, the most common port to use is 587 for SMTP
+  # submission. Other common options are: 25, 2525.
+  smtp_port: 587
+  # Whether to force TLS encrypted SMTP communications using STARTTLS.
+  # The STARTTLS command will always be used if available and cause a down
+  # status on error. This option forces a down status if the command is absent.
+  smtp_force_tls: true
   # E-Mail address to use in <From:> header (commonly referred to as the sender)
   # This is also the address a reply will be sent to when using PingPong-Mail.
   smtp_sender_address: email-ping@example.com
@@ -173,8 +177,12 @@ monitor will wait for a specified timeout and check that a reply was received.
   # The hostname of the IMAP server used to receive the response
   imap_host: imap.example.com
   # The port of the IMAP server used to receive the response
-  # Other common options are: 993
+  # Other common options are: 993 (Implicit SSL is not yet supported)
   imap_port: 143
+  # Whether to force TLS encrypted IMAP communications using STARTTLS.
+  # The STARTTLS command will always be used if available and cause a down
+  # status on error. This option forces a down status if the command is absent.
+  imap_force_tls: true
   # Username used to authenticate to the IMAP server
   imap_username: email-ping@example.com
   # Password used to authenticate to the IMAP server
