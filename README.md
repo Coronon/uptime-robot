@@ -1,8 +1,10 @@
 # Uptime-Robot
 
 Uptime-Robot is a versatile service that allows you to monitor various types of
-monitors and push the collected data to Uptime-Kuma. This README will guide you
-through the setup and configuration process for using Uptime-Robot effectively.
+monitors and push the collected data to
+[Uptime-Kuma](https://github.com/louislam/uptime-kuma). This README will guide
+you through the setup and configuration process for using Uptime-Robot
+effectively.
 
 ## Table of Contents
 
@@ -17,12 +19,14 @@ through the setup and configuration process for using Uptime-Robot effectively.
 
 Uptime-Robot is designed to help you monitor the uptime and performance of your
 websites, APIs, servers, and other online services. By configuring different
-monitor types, you can collect valuable data and push it to Uptime-Kuma for
-further analysis and visualization.
+monitor types, you can collect valuable data and push it to
+[Uptime-Kuma](https://github.com/louislam/uptime-kuma) for further analysis and
+visualization.
 
-Uptime-Kuma is a powerful open-source tool for monitoring and visualizing uptime
-data. It provides a user-friendly interface and a range of features to help you
-analyze the collected data and make informed decisions.
+[Uptime-Kuma](https://github.com/louislam/uptime-kuma) is a powerful open-source
+tool for monitoring and visualizing uptime data. It provides a user-friendly
+interface and a range of features to help you analyze the collected data and
+make informed decisions.
 
 ## Installation
 
@@ -225,10 +229,11 @@ terminal by following these steps:
 
 4. Uptime-Robot will start monitoring the specified monitor types and collect
 data.
-5. The collected data will be pushed to Uptime-Kuma for analysis and
+5. The collected data will be pushed to
+[Uptime-Kuma](https://github.com/louislam/uptime-kuma) for analysis and
 visualization.
-6. Access Uptime-Kuma through your preferred web browser and explore the
-collected data.
+6. Access [Uptime-Kuma](https://github.com/louislam/uptime-kuma) through your
+preferred web browser and explore the collected data.
 
 ## Contributing
 
