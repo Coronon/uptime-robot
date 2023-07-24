@@ -191,6 +191,7 @@ monitor will wait for a specified timeout and check that a reply was received.
 
   # The subject of the initially sent email
   # The variable `{UUID}` can optionally be used to include a random V4 UUID.
+  # It is ok not to include a UUID as old responses are cleaned before each run.
   message_subject: PING ({UUID})
   # The body (text) of the initially sent email
   message_body: This is an automated test message :)
