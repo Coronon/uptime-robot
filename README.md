@@ -141,6 +141,9 @@ receiving capabilities, an email is first sent to a reply host such as
 [PingPong-Mail](https://github.com/Coronon/pingpong-mail). After sending this
 monitor will wait for a specified timeout and check that a reply was received.
 
+It is advised to create a separate email account (inbox) for this monitor to
+avoid interference with other operations.
+
 ```yaml
 - name: Email working
   type: email_ping
