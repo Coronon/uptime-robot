@@ -9,11 +9,15 @@ require (
 )
 
 require (
+	github.com/emersion/go-sasl v0.0.0-20200509203442-7bfe0ed36a21 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
+	golang.org/x/text v0.3.7 // indirect
 )
 
 require (
-	golang.org/x/sys v0.1.0 // indirect
+	github.com/emersion/go-imap v1.2.1
+	github.com/google/uuid v1.3.0
+	golang.org/x/sys v0.10.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1
 )
