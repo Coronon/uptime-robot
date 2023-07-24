@@ -202,7 +202,7 @@ avoid interference with other operations.
   message_subject: PING ({UUID})
   # The body (text) of the initially sent email
   message_body: This is an automated test message :)
-  # Subject expected for email recieved back
+  # Subject expected for email received back
   # The variable `{ORIG_SUBJ}` will be replaced with the unaltered subject of
   # the sent email.
   response_subject: "PONG - '{ORIG_SUBJ}'"
