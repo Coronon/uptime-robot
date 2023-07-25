@@ -293,6 +293,11 @@ func (m *emailPingMonitor) receive_email(data *emailData, shouldWaitForResponse 
 			return message, 0, errors.New(message)
 		}
 	}
+	if len(uids) == 0 {
+		zap.S().Debugln("IMAP no response found - not waiting")
+		
+		return "", 0, nil
+	}
 	zap.S().Debugln("IMAP response found")
 
 	// Fetch the reply email
